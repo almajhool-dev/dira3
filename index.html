@@ -1,0 +1,516 @@
+<title>درع</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+/* layout: dark security console — sticky header + tab nav, each tab a focused tool panel */
+:root{
+  --bg:#0B0B0D; --bg2:#101114; --panel:#15161B; --panel2:#1B1C22; --line:#292A31;
+  --ink:#F3F3F5; --mut:#9A9AA2; --faint:#6C6C75;
+  --or:#FF7A1A; --or2:#FF9A45; --orSoft:rgba(255,122,26,.12);
+  --grn:#2FD47E; --grnSoft:rgba(47,212,126,.12);
+  --red:#FF4A3D; --redSoft:rgba(255,74,61,.12);
+  --amb:#FFB23D; --ambSoft:rgba(255,178,61,.12);
+  --disp:"Cairo","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --body:"IBM Plex Sans Arabic","Cairo",system-ui,sans-serif;
+  --r:18px; --r2:14px;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
+  background-image:radial-gradient(900px 600px at 80% -5%,rgba(255,122,26,.10),transparent 60%),radial-gradient(760px 520px at 10% 8%,rgba(255,122,26,.05),transparent 55%);
+  background-attachment:fixed;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--disp);margin:0;line-height:1.2;text-wrap:balance}
+button{font-family:var(--body);cursor:pointer}
+input,textarea,select{font-family:var(--body)}
+a{color:var(--or2)}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* header */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:#0A0A0C}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(10,10,12,.86);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:14px;padding-block:14px}
+.logo{display:flex;align-items:center;gap:12px;min-width:0}
+.logo .sh{width:42px;height:48px;flex:0 0 auto;filter:drop-shadow(0 0 16px rgba(255,122,26,.45))}
+.logo .nm{font-family:var(--disp);font-weight:900;font-size:30px;letter-spacing:.5px;background:linear-gradient(180deg,#FFC38A,#F26200);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.logo .tagline{font-size:12.5px;color:var(--mut);margin-top:-3px;font-weight:500}
+.proto{margin-inline-start:auto;flex:0 0 auto;font-size:12px;font-weight:600;color:var(--or2);border:1px solid rgba(255,122,26,.5);background:var(--orSoft);padding:5px 12px;border-radius:999px;white-space:nowrap}
+
+/* nav */
+nav{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;border:1px solid transparent;background:transparent;color:var(--mut);
+  padding:9px 15px;border-radius:999px;font-size:14.5px;font-weight:600;white-space:nowrap;transition:.15s}
+.tab:hover{color:var(--ink);background:var(--panel)}
+.tab[aria-selected="true"]{color:var(--ink);background:var(--panel2);border-color:var(--line)}
+.tab .dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.0}
+.tab[aria-selected="true"] .dot{opacity:1;background:var(--or)}
+
+main{padding-block:22px 60px}
+.panel{display:none;animation:fade .3s ease}
+.panel.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.panel.on{animation:none}}
+
+.lead{font-size:15px;color:var(--mut);margin:2px 0 18px;max-width:62ch}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:1.5px;color:var(--or2);text-transform:uppercase;margin-bottom:8px}
+.ph1{font-size:clamp(26px,6vw,36px);font-weight:900;margin-bottom:4px}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.card+.card{margin-top:16px}
+
+/* checker */
+.checkbox{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:0 30px 70px rgba(0,0,0,.4)}
+.field{display:flex;gap:10px;flex-wrap:wrap}
+.field input{flex:1;min-width:0;background:#0C0D10;border:1px solid var(--line);color:var(--ink);border-radius:var(--r2);
+  padding:15px 16px;font-size:16px;direction:ltr;text-align:left}
+.field input::placeholder{color:var(--faint);direction:rtl;text-align:right}
+.field input:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px var(--orSoft)}
+.btn{background:linear-gradient(180deg,var(--or2),var(--or));color:#1b0d02;border:none;border-radius:var(--r2);
+  padding:15px 26px;font-size:16px;font-weight:700;white-space:nowrap;box-shadow:0 10px 26px rgba(255,122,26,.3)}
+.btn:active{transform:translateY(1px)}
+.btn.sec{background:var(--panel2);color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn.danger{background:linear-gradient(180deg,#ff6a5d,var(--red));color:#fff;box-shadow:0 10px 26px rgba(255,74,61,.3)}
+.tries{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.try{font-size:12.5px;color:var(--mut);background:var(--panel);border:1px dashed var(--line);border-radius:999px;padding:6px 13px;direction:ltr}
+.try:hover{color:var(--ink);border-color:var(--or)}
+
+.verdict{margin-top:18px;border-radius:var(--r);padding:22px;border:1px solid var(--line);display:none}
+.verdict.show{display:block;animation:pop .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{from{opacity:0;transform:scale(.97)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.vtop{display:flex;align-items:center;gap:16px}
+.vbadge{width:64px;height:64px;flex:0 0 auto;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900}
+.vttl{font-family:var(--disp);font-weight:900;font-size:28px;line-height:1.1}
+.vsub{font-size:14px;color:var(--mut);margin-top:2px}
+.verdict.v-scam{background:var(--redSoft);border-color:rgba(255,74,61,.45)}
+.verdict.v-scam .vbadge{background:var(--red);color:#fff}
+.verdict.v-scam .vttl{color:#ff8e84}
+.verdict.v-safe{background:var(--grnSoft);border-color:rgba(47,212,126,.45)}
+.verdict.v-safe .vbadge{background:var(--grn);color:#042616}
+.verdict.v-safe .vttl{color:#6fe6a8}
+.verdict.v-review{background:var(--ambSoft);border-color:rgba(255,178,61,.45)}
+.verdict.v-review .vbadge{background:var(--amb);color:#2a1c00}
+.verdict.v-review .vttl{color:#ffcc7a}
+.reasons{list-style:none;padding:0;margin:16px 0 0;display:flex;flex-direction:column;gap:9px}
+.reasons li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--ink);background:rgba(0,0,0,.2);border-radius:12px;padding:11px 13px}
+.reasons li .ic{flex:0 0 auto;opacity:.9}
+.vact{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
+
+/* registry */
+.search{position:relative}
+.search input{width:100%;background:#0C0D10;border:1px solid var(--line);color:var(--ink);border-radius:var(--r2);padding:14px 46px 14px 16px;font-size:15.5px}
+.search input:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px var(--orSoft)}
+.search .mi{position:absolute;inset-inline-end:16px;top:50%;transform:translateY(-50%);color:var(--faint)}
+.rlist{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.rentry{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:14px 16px}
+.rentry .ri{flex:0 0 46px;height:46px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--or2)}
+.rentry .rn{font-weight:700;font-size:15.5px}
+.rentry .rc{font-size:13px;color:var(--mut);direction:ltr;text-align:right}
+.rentry .vmark{margin-inline-start:auto;flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;color:#6fe6a8;font-size:12.5px;font-weight:700;background:var(--grnSoft);border:1px solid rgba(47,212,126,.4);padding:5px 11px;border-radius:999px}
+.rtype{font-size:11.5px;color:var(--faint);font-weight:600;margin-top:2px}
+.empty{color:var(--faint);text-align:center;padding:28px;font-size:14px}
+
+/* report */
+label{display:block;font-size:13.5px;font-weight:600;color:var(--mut);margin:0 0 7px}
+.inp,textarea,select.inp{width:100%;background:#0C0D10;border:1px solid var(--line);color:var(--ink);border-radius:var(--r2);padding:13px 15px;font-size:15.5px}
+.inp:focus,textarea:focus,select.inp:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px var(--orSoft)}
+textarea{min-height:110px;resize:vertical;line-height:1.5}
+.frow{margin-bottom:16px}
+.ok{display:none;background:var(--grnSoft);border:1px solid rgba(47,212,126,.45);color:#8fecb9;border-radius:var(--r2);padding:16px;margin-top:4px;font-size:14.5px}
+.ok.show{display:block;animation:pop .3s}
+
+/* alerts */
+.alert{background:var(--panel);border:1px solid var(--line);border-inline-start:4px solid var(--red);border-radius:var(--r2);padding:16px 18px}
+.alert+.alert{margin-top:12px}
+.alert .at{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
+.alert .pill{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--redSoft);color:#ff8e84;margin-inline-start:auto}
+.alert .ad{font-size:14px;color:var(--mut);margin-top:8px}
+.alert .fix{font-size:13.5px;color:#8fecb9;margin-top:9px;display:flex;gap:8px;align-items:flex-start}
+
+/* dashboard */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r2);padding:16px}
+.stat .n{font-family:var(--disp);font-weight:900;font-size:30px;line-height:1;color:var(--or2)}
+.stat .l{font-size:12.5px;color:var(--mut);margin-top:6px}
+.bars{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.bar{display:grid;grid-template-columns:120px 1fr 48px;align-items:center;gap:12px;font-size:13.5px}
+.bar .bl{color:var(--ink)}
+.bar .bt{height:12px;border-radius:7px;background:var(--panel2);overflow:hidden}
+.bar .bf{height:100%;border-radius:7px;background:linear-gradient(90deg,var(--or),var(--or2))}
+.bar .bv{color:var(--mut);text-align:left}
+.spark{display:flex;align-items:flex-end;gap:6px;height:90px;margin-top:8px}
+.spark .sb{flex:1;background:linear-gradient(180deg,var(--or2),rgba(255,122,26,.25));border-radius:5px 5px 0 0;min-height:4px}
+.sparkx{display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-top:6px}
+
+.note{font-size:12.5px;color:var(--faint);margin-top:14px;display:flex;gap:8px;align-items:flex-start}
+.sectitle{font-size:19px;font-weight:700;margin:4px 0 2px}
+.demobar{background:var(--ambSoft);border:1px solid rgba(255,178,61,.35);color:#ffcf8c;border-radius:12px;padding:10px 14px;font-size:12.5px;margin-block:14px 2px;display:flex;gap:9px;align-items:center}
+footer{border-top:1px solid var(--line);margin-top:30px;padding-block:22px 10px;color:var(--faint);font-size:12.5px;text-align:center}
+footer b{color:var(--mut)}
+
+@media(max-width:560px){
+  .stats{grid-template-columns:1fr}
+  .bar{grid-template-columns:96px 1fr 42px;gap:9px}
+  .logo .nm{font-size:26px}
+  .vttl{font-size:23px}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="gSh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB36B"/><stop offset="1" stop-color="#F26200"/></linearGradient>
+</defs></svg>
+
+<header>
+  <div class="wrap">
+    <div class="hd">
+      <div class="logo">
+        <svg class="sh" viewBox="0 0 120 140" aria-hidden="true"><path d="M60 8 L108 28 V70 C108 106 88 128 60 134 C32 128 12 106 12 70 V28 Z" fill="#160B02" stroke="url(#gSh)" stroke-width="7" stroke-linejoin="round"/><path d="M38 70 L54 88 L84 52" fill="none" stroke="#FF9A4A" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div>
+          <div class="nm">درع</div>
+          <div class="tagline">منصة وطنية لمكافحة الاحتيال الرقمي</div>
+        </div>
+      </div>
+      <span class="proto">نموذج أولي</span>
+    </div>
+    <nav id="nav" role="tablist" aria-label="أقسام المنصة">
+      <button class="tab" role="tab" data-tab="fahes"><span class="dot"></span>فاحص الروابط والأرقام</button>
+      <button class="tab" role="tab" data-tab="balligh"><span class="dot"></span>بلّغ عن احتيال</button>
+      <button class="tab" role="tab" data-tab="sijil"><span class="dot"></span>السجل الرسمي</button>
+      <button class="tab" role="tab" data-tab="tanbihat"><span class="dot"></span>تنبيهات</button>
+      <button class="tab" role="tab" data-tab="lawha"><span class="dot"></span>لوحة الوزارة</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <!-- فاحص -->
+  <section class="panel" id="p-fahes" role="tabpanel">
+    <div class="eyebrow">تحقّق فوري</div>
+    <h2 class="ph1">هل هذا الرابط أو الرقم آمن؟</h2>
+    <p class="lead">الصق أي رابط، رقم، أو نص رسالة وصلتك، ونفحصه خلال ثواني مقابل قاعدة أنماط الاحتيال والجهات الرسمية.</p>
+    <div class="checkbox">
+      <div class="field">
+        <input id="q" placeholder="الصق رابط، رقم، أو نص الرسالة المشبوهة…" autocomplete="off" aria-label="المحتوى المراد فحصه">
+        <button class="btn" id="go">افحص الآن</button>
+      </div>
+      <div class="tries" id="tries"></div>
+      <div class="verdict" id="verdict" aria-live="polite"></div>
+    </div>
+    <p class="note"><span>🟢</span><span>فحص حيّ فعلي: للروابط والنطاقات والبريد، نستعلم مباشرة عن وجود النطاق (DNS) وعمره من سجلّ التسجيل العالمي — المواقع المنشأة حديثاً أقوى علامة احتيال. سمعة الأرقام الحيّة تنربط بقاعدة المشغّلين بعد التشغيل الرسمي.</span></p>
+  </section>
+
+  <!-- بلّغ -->
+  <section class="panel" id="p-balligh" role="tabpanel">
+    <div class="eyebrow">مشاركة مجتمعية</div>
+    <h2 class="ph1">بلّغ عن محاولة احتيال</h2>
+    <p class="lead">كل بلاغ يحمي غيرك. بلاغك يضيف الرابط أو الرقم لقائمة الفحص ويظهر أثره بلوحة الوزارة فوراً.</p>
+    <div class="card">
+      <div class="frow">
+        <label for="rtype2">نوع الاحتيال</label>
+        <select class="inp" id="rtype2">
+          <option>رسالة SMS</option><option>مكالمة هاتفية</option><option>رابط مشبوه</option>
+          <option>رسالة واتساب</option><option>حساب وهمي بالسوشيال</option><option>عرض عمل وهمي</option>
+        </select>
+      </div>
+      <div class="frow">
+        <label for="rcontent">المحتوى المشبوه (الرابط / الرقم / نص الرسالة)</label>
+        <textarea class="inp" id="rcontent" placeholder="مثال: وصلني رابط http://… يقول ربحت جائزة"></textarea>
+      </div>
+      <div class="frow">
+        <label for="rnote">ملاحظة (اختياري)</label>
+        <input class="inp" id="rnote" placeholder="شنو صار؟ شلون وصلك؟">
+      </div>
+      <button class="btn danger" id="submitReport">إرسال البلاغ</button>
+      <div class="ok" id="reportOk"></div>
+    </div>
+    <p class="note"><span>🔒</span><span>لا نطلب أي بيانات شخصية. بلاغك مجهول، ويُستخدم فقط لحماية باقي المستخدمين.</span></p>
+  </section>
+
+  <!-- السجل -->
+  <section class="panel" id="p-sijil" role="tabpanel">
+    <div class="eyebrow">تحقّق من الهوية</div>
+    <h2 class="ph1">السجل الرسمي للجهات</h2>
+    <p class="lead">دوّر على اسم بنك، مشغّل، أو جهة حكومية، وشوف قنواتها الرسمية الموثّقة — حتى تميّز الرسالة الصحيحة من المزيّفة.</p>
+    <div class="search">
+      <input id="rq" placeholder="ابحث: بنك، آسياسيل، وزارة…" autocomplete="off" aria-label="بحث السجل">
+      <span class="mi">🔍</span>
+    </div>
+    <div class="rlist" id="rlist"></div>
+  </section>
+
+  <!-- تنبيهات -->
+  <section class="panel" id="p-tanbihat" role="tabpanel">
+    <div class="eyebrow">احتيال الأسبوع</div>
+    <h2 class="ph1">حملات احتيال منتشرة حالياً</h2>
+    <p class="lead">أحدث أساليب الاحتيال اللي ترصدها المنصة، وشلون تتجنّبها.</p>
+    <div id="alerts"></div>
+  </section>
+
+  <!-- لوحة الوزارة -->
+  <section class="panel" id="p-lawha" role="tabpanel">
+    <div class="eyebrow">مؤشّرات الأثر</div>
+    <h2 class="ph1">لوحة وزارة الاتصالات</h2>
+    <p class="lead">نظرة سريعة على حجم الحماية اللي توفّرها المنصة للمواطن.</p>
+    <div class="stats" id="stats"></div>
+    <div class="card" style="margin-top:16px">
+      <div class="sectitle">البلاغات حسب النوع</div>
+      <div class="bars" id="bars"></div>
+    </div>
+    <div class="card">
+      <div class="sectitle">البلاغات آخر ٧ أيام</div>
+      <div class="spark" id="spark"></div>
+      <div class="sparkx"><span>قبل ٧</span><span>قبل ٦</span><span>قبل ٥</span><span>قبل ٤</span><span>قبل ٣</span><span>أمس</span><span>اليوم</span></div>
+    </div>
+    <p class="note"><span>📊</span><span>الأرقام في هذا النموذج تجريبية للعرض. بعد التشغيل الفعلي تعكس البلاغات والفحوصات الحقيقية مباشرة.</span></p>
+  </section>
+
+  <div class="demobar"><span>⚠️</span><span>هذا نموذج أولي (Prototype) لعرض الفكرة — مقترح مقدّم إلى وزارة الاتصالات. البيانات تجريبية وليست خدمة رسمية.</span></div>
+
+  <footer>
+    فكرة ومقترح: <b>المبرمج المجهول</b> · «درع» منصة وطنية لمكافحة الاحتيال الرقمي · نموذج أولي للعرض
+  </footer>
+</div>
+</main>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+/* ---------- storage (per-viewer, safe) ---------- */
+const KEY = "dira3_reports_v1";
+function loadReports(){ try{ return JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ return []; } }
+function saveReports(a){ try{ localStorage.setItem(KEY, JSON.stringify(a.slice(-200))); }catch(e){} }
+let reports = loadReports();
+
+/* ---------- seeded reference data ---------- */
+const OFFICIAL = [
+  {n:"مصرف الرشيد", t:"بنك حكومي", c:"rasheedbank.gov.iq", kw:["رشيد","rasheed"]},
+  {n:"مصرف الرافدين", t:"بنك حكومي", c:"rafidain-bank.gov.iq", kw:["رافدين","rafidain"]},
+  {n:"المصرف التجاري العراقي (TBI)", t:"بنك", c:"tbiraq.com", kw:["تجاري","tbi"]},
+  {n:"آسياسيل", t:"مشغّل اتصالات", c:"asiacell.com", kw:["اسياسيل","آسياسيل","asia","asiacell"]},
+  {n:"زين العراق", t:"مشغّل اتصالات", c:"iq.zain.com", kw:["زين","zain"]},
+  {n:"كورك تيليكوم", t:"مشغّل اتصالات", c:"korektel.com", kw:["كورك","korek"]},
+  {n:"وزارة الاتصالات", t:"جهة حكومية", c:"moc.gov.iq", kw:["اتصالات","وزارة","moc"]},
+  {n:"زين كاش", t:"محفظة دفع", c:"zaincash.iq", kw:["زين كاش","زينكاش","zaincash"]},
+  {n:"آسيا حوالة", t:"محفظة دفع", c:"asiahawala.iq", kw:["اسيا حوالة","آسيا حوالة","hawala"]},
+];
+const ALERTS = [
+  {t:"رسالة «ربحت جائزة»", sev:"خطر مرتفع", d:"رابط يدّعي إنك فزت بجائزة أو رصيد مجاني، ويطلب منك تضغط وتدخل بياناتك.", fix:"لا تضغط الرابط. أي جهة رسمية ما توزّع جوائز برابط مجهول."},
+  {t:"مكالمة من «موظف البنك»", sev:"خطر مرتفع", d:"يتصل ويعرف اسمك وآخر أرقام بطاقتك، ويطلب رمز التحقق «لحماية حسابك».", fix:"البنك أبداً ما يطلب رمز التحقق. سكّر وراجع فرعك مباشرة."},
+  {t:"سرقة رمز واتساب", sev:"خطر متوسط", d:"حد يدّعي إنه صديقك ويطلب رمز التحقق اللي وصلك بالغلط.", fix:"لا تشارك رمز التحقق مع أي أحد، حتى لو يعرف اسمك."},
+  {t:"عرض عمل أو استثمار وهمي", sev:"خطر متوسط", d:"عرض ربح سريع يطلب «رسوم تسجيل» أو تحويل مبلغ أول.", fix:"أي عمل حقيقي ما يطلب منك فلوس مقدّماً. دقّق بالجهة."},
+];
+const BASE_TOTAL = 2847, BASE_BLOCKED = 1930;
+const BY_TYPE = [
+  {l:"رسائل SMS", v:41},{l:"مكالمات", v:23},{l:"روابط مزيّفة", v:19},{l:"واتساب", v:11},{l:"حسابات وهمية", v:6},
+];
+const WEEK = [180,240,205,320,290,410,470];
+
+/* ---------- checker engine ---------- */
+const SCAM_WORDS = ["ربحت","فزت","جائزة","مبروك","مجان","مجاناً","رمز التحقق","كود التحقق","otp","حدث حسابك","حدّث","سينغلق","ينغلق","يغلق","راح يغلق","فوراً","فورا","اضغط الرابط","اضغط هنا","انقر","رصيد مجاني","الفائز","حوّل","حول المبلغ","رسوم","غرامة","احذر حسابك","تم إيقاف","سيتم إيقاف","بياناتك","كلمة السر","الباسورد"];
+const SHORTENERS = ["bit.ly","tinyurl","cutt.ly","t.co","is.gd","rb.gy","ow.ly","rebrand.ly","shorturl.at","bit.do"];
+const SUS_TLD = [".co",".xyz",".top",".click",".win",".vip",".online",".site",".info",".link",".buzz",".cfd",".sbs",".shop",".live",".icu"];
+const BRANDISH = ["bank","rafidain","rasheed","asiacell","zain","korek","zaincash","pay","gov","iq-","-iq","reward","win","gift","verify","login","secure","account","update"];
+
+function digitsOnly(s){ return s.replace(/[^\d]/g,""); }
+function looksUrl(s){ return /https?:\/\//i.test(s) || /\b[a-z0-9-]+\.[a-z]{2,}(\/|$|\?)/i.test(s); }
+function looksNumber(s){ const d=digitsOnly(s); return d.length>=6 && d.length<=15 && /^[\d\s+\-()]+$/.test(s.trim()); }
+function hostOf(s){ try{ let u=s.match(/https?:\/\//i)?s:("http://"+s); return new URL(u).hostname.toLowerCase().replace(/^www\./,""); }catch(e){ return (s.toLowerCase().match(/[a-z0-9.-]+\.[a-z]{2,}/)||[""])[0]; } }
+
+// --- live lookups: keyless, CORS-enabled, work from any normal host ---
+function extractDomain(s){
+  const em = s.match(/[^\s@]+@([a-z0-9.-]+\.[a-z]{2,})/i);
+  if(em) return {domain:em[1].toLowerCase().replace(/\.$/,""), kind:"email"};
+  if(looksUrl(s)){ const h=hostOf(s); return h?{domain:h,kind:"url"}:null; }
+  const bd = s.trim().match(/^((?:[a-z0-9-]+\.)+[a-z]{2,})$/i);
+  if(bd) return {domain:bd[1].toLowerCase(), kind:"url"};
+  return null;
+}
+async function fetchJSON(url,ms){
+  const c=new AbortController(); const t=setTimeout(()=>c.abort(),ms||6500);
+  try{ const r=await fetch(url,{signal:c.signal,headers:{accept:"application/json"}}); clearTimeout(t);
+    if(!r.ok) return null; return await r.json(); }
+  catch(e){ clearTimeout(t); return null; }
+}
+async function doh(name,type){ return await fetchJSON("https://dns.google/resolve?name="+encodeURIComponent(name)+"&type="+type); }
+async function rdapAge(domain){
+  const j=await fetchJSON("https://rdap.org/domain/"+encodeURIComponent(domain),7500);
+  if(!j||!j.events) return null;
+  const ev=j.events.find(e=>e.eventAction==="registration");
+  if(!ev||!ev.eventDate) return null;
+  const days=Math.floor((Date.now()-new Date(ev.eventDate).getTime())/86400000);
+  return (days>=0 && days<60000)?{days, date:ev.eventDate.slice(0,10)}:null;
+}
+function heurPatterns(s,low,h,add){
+  if(/^https?:\/\//i.test(s) && !/^https:\/\//i.test(s)) add(1,"الرابط غير مشفّر (http بدل https)");
+  if(/\/\/\d{1,3}(\.\d{1,3}){3}/.test(s)) add(2,"يستخدم عنوان IP بدل اسم موقع — إشارة خطر");
+  if(/xn--/.test(h)) add(2,"يستخدم أحرف مموّهة تقلّد اسم موقع حقيقي");
+  if(SHORTENERS.some(x=>h.endsWith(x))) add(2,"رابط مختصر يخفي الوجهة الحقيقية");
+  if(SUS_TLD.some(x=>h.endsWith(x))) add(1,"امتداد نطاق شائع بالاحتيال ("+SUS_TLD.find(x=>h.endsWith(x))+")");
+  if(BRANDISH.filter(b=>h.includes(b)).length) add(2,"اسم النطاق يحاول يقلّد جهة رسمية");
+  if(SCAM_WORDS.some(w=>low.includes(w))) add(1,"النص يحتوي كلمات إغراء/استعجال");
+  if((h.match(/\./g)||[]).length>=3) add(1,"نطاق فرعي كثير — أسلوب تمويه شائع");
+}
+async function analyze(raw){
+  const s = raw.trim(); const low = s.toLowerCase();
+  let score=0; const reasons=[]; let kind="نص"; let live=false;
+  const add=(pts,txt,ic)=>{ score+=pts; reasons.push({txt,ic:ic||(pts>0?"⚠️":"✓")}); };
+  const info = extractDomain(s);
+
+  // official match → trusted
+  if(info){ for(const o of OFFICIAL){ if(info.domain===o.c || info.domain.endsWith("."+o.c)){
+    return {v:"safe", kind:(info.kind==="email"?"بريد":"رابط")+" رسمي", title:"جهة رسمية موثّقة", sub:o.n,
+      reasons:[{txt:"يطابق النطاق الرسمي: "+o.c,ic:"✓"},{txt:"مسجّل بالسجل الرسمي للمنصة",ic:"✓"}]};
+  }}}
+
+  if(info){
+    kind = info.kind==="email" ? "بريد إلكتروني" : "رابط / نطاق";
+    const dom = info.domain;
+    const a = await doh(dom,"A");
+    if(a===null){ add(0,"تعذّر الاستعلام الحيّ (تأكد من اتصال الإنترنت)","ℹ️"); }
+    else { live=true;
+      const resolves = Array.isArray(a.Answer) && a.Answer.some(x=>x.type===1);
+      if(!resolves) add(2,"النطاق ما يتحلّل فعلياً عبر DNS — غالباً وهمي أو متوقّف","🛑");
+      else add(0,"النطاق موجود ويتحلّل عبر DNS (فحص حيّ)","✓");
+    }
+    const age = await rdapAge(dom);
+    if(age){ live=true;
+      if(age.days<30) add(3,"نطاق جديد جداً — عمره "+age.days+" يوم فقط (سُجّل "+age.date+"). أقوى علامة احتيال.","🛑");
+      else if(age.days<180) add(1,"نطاق حديث — عمره "+age.days+" يوم (سُجّل "+age.date+")");
+      else add(0,"نطاق قديم ومستقر — مُسجّل منذ "+age.date+" (فحص حيّ)","✓");
+    }
+    if(info.kind==="email"){
+      const mx = await doh(dom,"MX");
+      if(mx && (!Array.isArray(mx.Answer) || !mx.Answer.length)) add(1,"نطاق البريد ما عنده سجلّات استقبال (MX) — مشبوه");
+    }
+    heurPatterns(s, low, dom, add);
+    if(score===0) add(0,"ما ظهرت إشارات احتيال — بس تأكد من الجهة قبل ما تدخل بياناتك","ℹ️");
+  } else if(looksNumber(s)){
+    kind="رقم"; const d=digitsOnly(s);
+    const rep = reports.filter(r=>digitsOnly(r.content).includes(d) && d.length>=6).length;
+    if(rep>0) add(3,"تم التبليغ عن هذا الرقم "+rep+" مرة من المستخدمين");
+    if(/^00|^\+(?!964)/.test(s.trim())) add(1,"رقم دولي من خارج العراق");
+    if(d.length>=6 && d.length<=8) add(1,"رقم قصير — تأكد إنه رقم رسمي مسجّل");
+    add(0,"سمعة الأرقام الحيّة تنربط بقاعدة المشغّلين بعد التشغيل الرسمي","ℹ️");
+  } else {
+    kind="رسالة"; let hits=0;
+    for(const w of SCAM_WORDS){ if(low.includes(w)){ hits++; } }
+    if(/رمز|كود|otp/.test(low) && /تحقق|verification|verify/.test(low)) add(3,"يطلب رمز التحقق — أي جهة رسمية ما تطلبه أبداً");
+    if(hits>=3) add(2,"يحتوي عدة كلمات إغراء واستعجال");
+    else if(hits>0) add(1,"يحتوي كلمات إغراء/استعجال");
+    const urls=s.match(/https?:\/\/\S+|\b[a-z0-9-]+\.[a-z]{2,}\/\S*/i);
+    if(urls) add(2,"يحتوي رابط — افحص الرابط نفسه بالأعلى قبل الضغط");
+    if(score===0) add(0,"ما ظهرت إشارات احتيال قوية — بس خلّي حذرك","ℹ️");
+  }
+
+  let v = score>=3 ? "scam" : (score>=1 ? "review" : "safe");
+  const map = {
+    scam:{title:"احتيال — لا تتفاعل معه",sub:"إشارات خطر قوية"},
+    review:{title:"مشبوه — تحقّق قبل ما تثق",sub:"فيه إشارات تستدعي الحذر"},
+    safe:{title:"ما ظهر خطر واضح",sub:"بس التحقق اليدوي يبقى أضمن"},
+  };
+  return {v, kind:kind+(live?" · فحص حيّ":""), title:map[v].title, sub:map[v].sub, reasons};
+}
+
+function renderVerdict(res, raw){
+  const el=$("#verdict");
+  const icon = {scam:"✕",review:"⚠",safe:"✓"}[res.v];
+  const canReport = res.v!=="safe";
+  el.className="verdict show v-"+res.v;
+  el.innerHTML =
+    '<div class="vtop"><div class="vbadge">'+icon+'</div><div><div class="vttl">'+res.title+'</div>'+
+    '<div class="vsub">'+res.kind+' · '+res.sub+'</div></div></div>'+
+    '<ul class="reasons">'+res.reasons.map(r=>'<li><span class="ic">'+r.ic+'</span><span>'+r.txt+'</span></li>').join("")+'</ul>'+
+    (canReport?'<div class="vact"><button class="btn danger" id="toReport">بلّغ عن هذا</button><button class="btn sec" id="clearV">فحص ثاني</button></div>':'<div class="vact"><button class="btn sec" id="clearV">فحص ثاني</button></div>');
+  if(canReport) $("#toReport").onclick=()=>{ selectTab("balligh"); $("#rcontent").value=raw; $("#rcontent").focus(); };
+  $("#clearV").onclick=()=>{ el.className="verdict"; $("#q").value=""; $("#q").focus(); };
+  el.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+let checking=false;
+async function runCheck(){
+  const raw=$("#q").value.trim(); if(!raw){ $("#q").focus(); return; }
+  if(checking) return; checking=true;
+  const el=$("#verdict");
+  el.className="verdict show v-review";
+  el.innerHTML='<div class="vtop"><div class="vbadge" style="background:var(--panel2);color:var(--or2)">⟳</div><div><div class="vttl" style="color:var(--ink)">جارٍ الفحص الحيّ…</div><div class="vsub">نستعلم عن النطاق عبر DNS وسجلّ التسجيل</div></div></div>';
+  el.querySelector(".vbadge").style.animation="spin 1s linear infinite";
+  try{ const res=await analyze(raw); renderVerdict(res, raw); }
+  catch(e){ el.className="verdict show v-review"; el.innerHTML='<div class="vtop"><div class="vbadge">⚠</div><div><div class="vttl">تعذّر إكمال الفحص</div><div class="vsub">جرّب مرة ثانية</div></div></div>'; }
+  checking=false;
+}
+
+const TRIES=["http://b7-reward-iq.co/win?id=842","+9647xx-unknown","رمز التحقق 8429 لا تطلعه لأحد — حدّث حسابك فوراً","rasheedbank.gov.iq"];
+$("#tries").innerHTML = TRIES.map((t,i)=>'<button class="try" data-i="'+i+'">جرّب: '+(t.length>34?t.slice(0,34)+"…":t)+'</button>').join("");
+$$("#tries .try").forEach(b=>b.onclick=()=>{ $("#q").value=TRIES[+b.dataset.i]; runCheck(); });
+$("#go").onclick=runCheck;
+$("#q").addEventListener("keydown",e=>{ if(e.key==="Enter") runCheck(); });
+
+/* ---------- report ---------- */
+$("#submitReport").onclick=()=>{
+  const content=$("#rcontent").value.trim();
+  if(!content){ $("#rcontent").focus(); return; }
+  const r={type:$("#rtype2").value, content, note:$("#rnote").value.trim(), ts:Date.now()};
+  reports.push(r); saveReports(reports);
+  const ok=$("#reportOk"); ok.className="ok show";
+  ok.innerHTML="✅ وصل بلاغك، شكراً! صار مجموع بلاغاتك بهالجهاز <b>"+reports.length+"</b>. المحتوى اللي بلّغت عنه راح ينكشف أسرع بالفاحص.";
+  $("#rcontent").value=""; $("#rnote").value="";
+  renderStats();
+};
+
+/* ---------- registry ---------- */
+function renderRegistry(q){
+  q=(q||"").trim().toLowerCase();
+  const list = OFFICIAL.filter(o=> !q || o.n.toLowerCase().includes(q) || o.kw.some(k=>k.includes(q)||q.includes(k)) || o.c.includes(q));
+  const el=$("#rlist");
+  if(!list.length){ el.innerHTML='<div class="empty">ما لگينا جهة بهذا الاسم بالسجل. إذا جهة تدّعي إنها رسمية وما موجودة هنا — خذ حذرك.</div>'; return; }
+  el.innerHTML=list.map(o=>
+    '<div class="rentry"><div class="ri">🏛️</div><div style="min-width:0"><div class="rn">'+o.n+'</div>'+
+    '<div class="rc">'+o.c+'</div><div class="rtype">'+o.t+'</div></div>'+
+    '<span class="vmark">✓ موثّق</span></div>').join("");
+}
+$("#rq").addEventListener("input",e=>renderRegistry(e.target.value));
+
+/* ---------- alerts ---------- */
+$("#alerts").innerHTML = ALERTS.map(a=>
+  '<div class="alert"><div class="at">⚠️ '+a.t+'<span class="pill">'+a.sev+'</span></div>'+
+  '<div class="ad">'+a.d+'</div><div class="fix">🛡️ <span>'+a.fix+'</span></div></div>').join("");
+
+/* ---------- dashboard ---------- */
+function renderStats(){
+  const total=BASE_TOTAL+reports.length;
+  const blocked=BASE_BLOCKED+Math.round(reports.length*0.7);
+  $("#stats").innerHTML=
+    '<div class="stat"><div class="n tnum">'+total.toLocaleString("en-US")+'</div><div class="l">بلاغ مستلم</div></div>'+
+    '<div class="stat"><div class="n tnum">'+blocked.toLocaleString("en-US")+'</div><div class="l">محاولة احتيال أُوقفت</div></div>'+
+    '<div class="stat"><div class="n tnum">68%</div><div class="l">تنكشف خلال ثواني</div></div>';
+}
+function renderBars(){
+  const max=Math.max(...BY_TYPE.map(b=>b.v));
+  $("#bars").innerHTML=BY_TYPE.map(b=>
+    '<div class="bar"><span class="bl">'+b.l+'</span><div class="bt"><div class="bf" style="width:'+(b.v/max*100).toFixed(0)+'%"></div></div><span class="bv tnum">'+b.v+'%</span></div>').join("");
+}
+function renderSpark(){
+  const max=Math.max(...WEEK);
+  $("#spark").innerHTML=WEEK.map(v=>'<div class="sb" style="height:'+(v/max*100).toFixed(0)+'%"></div>').join("");
+}
+
+/* ---------- tabs + routing ---------- */
+const TABS=["fahes","balligh","sijil","tanbihat","lawha"];
+function selectTab(name){
+  if(!TABS.includes(name)) name="fahes";
+  $$(".tab").forEach(t=>t.setAttribute("aria-selected", t.dataset.tab===name));
+  $$(".panel").forEach(p=>p.classList.toggle("on", p.id==="p-"+name));
+  try{ if(location.hash.slice(1)!==name) history.replaceState(null,"","#"+name); }catch(e){}
+}
+$$(".tab").forEach(t=>t.onclick=()=>selectTab(t.dataset.tab));
+window.addEventListener("hashchange",()=>selectTab(location.hash.slice(1)));
+
+/* ---------- init ---------- */
+renderRegistry(""); renderStats(); renderBars(); renderSpark();
+selectTab(location.hash.slice(1)||"fahes");
+</script>
